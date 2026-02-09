@@ -2,97 +2,127 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>נחש מי - מתחיל פתוח</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>נחש מי - יציב</title>
     <style>
-        /* --- הגדרות למקרן ומסך מלא --- */
-        body {
-            font-family: sans-serif;
-            background-color: #222; /* רקע כהה */
-            margin: 0;
-            padding: 10px;
-            height: 100vh;
-            box-sizing: border-box;
-            overflow-y: auto;
+        /* --- תיקון הקפיצות (הכי חשוב) --- */
+        *, *::before, *::after {
+            box-sizing: border-box; /* נועל את חישוב המסגרות */
         }
 
-        h1 { display: none; } /* מסתיר כותרת לחיסכון במקום */
+        body {
+            font-family: sans-serif;
+            background-color: #222;
+            margin: 0;
+            padding: 10px;
+            overflow-y: auto; 
+        }
 
         .game-board {
             display: grid;
-            /* מסדר את הכרטיסים בצפיפות למסך רחב */
-            grid-template-columns: repeat(auto-fit, minmax(9%, 1fr));
-            gap: 6px; 
+            /* טלפון: גודל נוח */
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+            gap: 10px;
+            padding-bottom: 50px;
             width: 100%;
-            height: 100%;
         }
 
-        .card {
-          background-color: transparent;
-          aspect-ratio: 3 / 4;
-          perspective: 1000px;
-          cursor: pointer;
-    
-    /* --- התיקון: --- */
-          transform-style: preserve-3d; /* מוודא שהסיבוב נשאר באותו מרחב */
-          will-change: transform;       /* אומר לדפדפן להתכונן לשינוי, מונע קפיצות */
-}
+        /* --- הגדרות למקרן (מסך רחב) --- */
+        @media (min-width: 768px) {
+            body {
+                height: 100vh;
+                overflow: hidden; /* ביטול גלילה במחשב */
+                padding: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
 
+            .game-board {
+                /* דוחס את כולם למסך אחד */
+                grid-template-columns: repeat(auto-fit, minmax(8%, 1fr));
+                gap: 8px; 
+                height: 95vh;
+                padding-bottom: 0;
+                align-content: center;
+            }
+        }
+
+        /* --- הכרטיס --- */
+        .card {
+            background-color: transparent;
+            aspect-ratio: 3 / 4;
+            perspective: 1000px; /* עומק תלת מימד */
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         .card-inner {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          text-align: center;
-          transition: transform 0.6s;
-          transform-style: preserve-3d;
-    
-    /* --- התיקון: --- */
-          transform-origin: center center; /* מקבע את ציר הסיבוב לאמצע בדיוק */
-}
-
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            
+            /* התיקון לקפיצה ימינה/שמאלה: */
+            transform-origin: 50% 50%; 
+        }
 
         .card.flipped .card-inner {
             transform: rotateY(180deg);
         }
 
+        /* --- עיצוב הצדדים --- */
         .card-front, .card-back {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
             border-radius: 6px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            
+            /* חשוב: מסגרת זהה לשני הצדדים למניעת קפיצות */
+            border: 3px solid white; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+            
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* --- צד קדמי: עכשיו הוא התמונה! (רואים ישר) --- */
+        /* --- צד קדמי (תמונה) --- */
         .card-front {
             background-color: white;
-            border: 2px solid #ccc;
-            overflow: hidden; /* שלא יצאו שוליים של תמונה */
+            overflow: hidden;
+            /* תיקון צבע מסגרת לתמונה */
+            border-color: #ddd; 
         }
 
         .card-front img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block; /* מונע רווחים למטה */
         }
 
-        /* --- צד אחורי: עכשיו הוא הכחול (מוסתר בהתחלה) --- */
+        /* --- צד אחורי (סימן שאלה) --- */
         .card-back {
             background: linear-gradient(135deg, #0052D4, #4364F7, #6FB1FC);
-            transform: rotateY(180deg); /* מתחיל הפוך */
-            border: 2px solid white;
-            
-            /* סימן שאלה */
             color: white;
-            font-size: 3vw; 
+            font-size: 3rem; /* גודל פונט גדול */
             font-weight: bold;
             text-shadow: 2px 2px 4px black;
+            
+            /* מסובב מראש כדי שיתהפך ישר */
+            transform: rotateY(180deg);
+        }
+
+        /* התאמת גודל הפונט במחשב שלא יהיה ענק מדי */
+        @media (min-width: 768px) {
+            .card-back { font-size: 2.5vw; }
         }
 
     </style>
@@ -102,25 +132,19 @@
     <div class="game-board" id="board"></div>
 
     <script>
-        /* --- הגדרות --- */
-        const numberOfCards = 43; // כמות הכרטיסים
         const board = document.getElementById('board');
+        const numberOfCards = 43; 
 
         function createBoard() {
             for (let i = 1; i <= numberOfCards; i++) {
                 const card = document.createElement('div');
                 card.classList.add('card');
                 
-                /* שיניתי את הסדר בתוך ה-HTML:
-                   card-front = התמונה (src)
-                   card-back = סימן שאלה
-                */
                 card.innerHTML = `
                     <div class="card-inner">
                         <div class="card-front">
-                            <img src="${i}.jpg" loading="lazy" onerror="this.parentElement.style.backgroundColor='#eee'">
+                            <img src="${i}.jpg" loading="lazy">
                         </div>
-                        
                         <div class="card-back">?</div>
                     </div>
                 `;
@@ -136,6 +160,4 @@
         createBoard();
     </script>
 </body>
-
 </html>
-
