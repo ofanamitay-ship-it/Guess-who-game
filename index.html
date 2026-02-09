@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>נחש מי - מתוקן סופית</title>
+    <title>נחש מי - יציב</title>
     <style>
         /* --- תיקון הקפיצות (הכי חשוב) --- */
         *, *::before, *::after {
-            box-sizing: border-box; 
+            box-sizing: border-box; /* נועל את חישוב המסגרות */
         }
 
         body {
@@ -15,26 +15,23 @@
             background-color: #222;
             margin: 0;
             padding: 10px;
-            /* ברירת מחדל: תמיד מאפשר גלילה (לטלפונים) */
             overflow-y: auto; 
-            min-height: 100vh;
         }
 
         .game-board {
             display: grid;
-            /* בטלפון (גם לרוחב) - כרטיסים בגודל קבוע ונוח */
+            /* טלפון: גודל נוח */
             grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
             gap: 10px;
             padding-bottom: 50px;
             width: 100%;
         }
 
-        /* --- הגדרות למקרן / מחשב בלבד --- */
-        /* שיניתי את המספר ל-1024 כדי שטלפונים לרוחב לא ייכנסו לפה */
-        @media (min-width: 1024px) {
+        /* --- הגדרות למקרן (מסך רחב) --- */
+        @media (min-width: 768px) {
             body {
                 height: 100vh;
-                overflow: hidden; /* רק במחשב אמיתי נבטל גלילה */
+                overflow: hidden; /* ביטול גלילה במחשב */
                 padding: 10px;
                 display: flex;
                 align-items: center;
@@ -55,7 +52,7 @@
         .card {
             background-color: transparent;
             aspect-ratio: 3 / 4;
-            perspective: 1000px;
+            perspective: 1000px; /* עומק תלת מימד */
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
@@ -67,353 +64,11 @@
             text-align: center;
             transition: transform 0.6s;
             transform-style: preserve-3d;
-            transform-origin: 50% 50%; /* תיקון יציבות */
+            
+            /* התיקון לקפיצה ימינה/שמאלה: */
+            transform-origin: 50% 50%; 
         }
 
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        /* --- עיצוב הצדדים --- */
-        .card-front, .card-back {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 6px;
-            border: 3px solid white; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* --- צד קדמי (תמונה) --- */
-        .card-front {
-            background-color: white;
-            overflow: hidden;
-            border-color: #ddd; 
-        }
-
-        .card-front img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* --- צד אחורי (סימן שאלה) --- */
-        .card-back {
-            background: linear-gradient(135deg, #0052D4, #4364F7, #6FB1FC);
-            color: white;
-            font-size: 3rem;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px black;
-            transform: rotateY(180deg);
-        }
-
-        @media (min-width: 1024px) {
-            .card-back { font-size: 2.5vw; }
-        }
-
-    </style>
-</head>
-<body>
-
-    <div class="game-board" id="board"></div>
-
-    <script>
-        const board = document.getElementById('board');
-        const numberOfCards = 43; 
-
-        function createBoard() {
-            for (let i = 1; i <= numberOfCards; i++) {
-                const card = document.createElement('div');
-                card.classList.add('card');
-                
-                card.innerHTML = `
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <img src="${i}.jpg" loading="lazy">
-                        </div>
-                        <div class="card-back">?</div>
-                    </div>
-                `;
-
-                card.addEventListener('click', function() {
-                    this.classList.toggle('flipped');
-                });
-
-                board.appendChild(card);
-            }
-        }
-
-        createBoard();
-    </script>
-</body>
-</html>
-
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        /* --- עיצוב הצדדים --- */
-        .card-front, .card-back {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 6px;
-            border: 3px solid white; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* --- צד קדמי (תמונה) --- */
-        .card-front {
-            background-color: white;
-            overflow: hidden;
-            border-color: #ddd; 
-        }
-
-        .card-front img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* --- צד אחורי (סימן שאלה) --- */
-        .card-back {
-            background: linear-gradient(135deg, #0052D4, #4364F7, #6FB1FC);
-            color: white;
-            font-size: 3rem;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px black;
-            transform: rotateY(180deg);
-        }
-
-        @media (min-width: 1024px) {
-            .card-back { font-size: 2.5vw; }
-        }
-
-    </style>
-</head>
-<body>
-
-    <div class="game-board" id="board"></div>
-
-    <script>
-        const board = document.getElementById('board');
-        const numberOfCards = 43; 
-
-        function createBoard() {
-            for (let i = 1; i <= numberOfCards; i++) {
-                const card = document.createElement('div');
-                card.classList.add('card');
-                
-                card.innerHTML = `
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <img src="${i}.jpg" loading="lazy">
-                        </div>
-                        <div class="card-back">?</div>
-                    </div>
-                `;
-
-                card.addEventListener('click', function() {
-                    this.classList.toggle('flipped');
-                });
-
-                board.appendChild(card);
-            }
-        }
-
-        createBoard();
-    </script>
-</body>
-</html>
-
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        /* --- עיצוב הצדדים --- */
-        .card-front, .card-back {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 6px;
-            border: 3px solid white; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* --- צד קדמי (תמונה) --- */
-        .card-front {
-            background-color: white;
-            overflow: hidden;
-            border-color: #ddd; 
-        }
-
-        .card-front img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* --- צד אחורי (סימן שאלה) --- */
-        .card-back {
-            background: linear-gradient(135deg, #0052D4, #4364F7, #6FB1FC);
-            color: white;
-            font-size: 3rem;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px black;
-            transform: rotateY(180deg);
-        }
-
-        /* התאמת גודל פונט למחשב */
-        @media (min-width: 1024px) and (hover: hover) {
-            .card-back { font-size: 2.5vw; }
-        }
-
-    </style>
-</head>
-<body>
-
-    <div class="game-board" id="board"></div>
-
-    <script>
-        const board = document.getElementById('board');
-        const numberOfCards = 43; 
-
-        function createBoard() {
-            for (let i = 1; i <= numberOfCards; i++) {
-                const card = document.createElement('div');
-                card.classList.add('card');
-                
-                card.innerHTML = `
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <img src="${i}.jpg" loading="lazy">
-                        </div>
-                        <div class="card-back">?</div>
-                    </div>
-                `;
-
-                card.addEventListener('click', function() {
-                    this.classList.toggle('flipped');
-                });
-
-                board.appendChild(card);
-            }
-        }
-
-        createBoard();
-    </script>
-</body>
-</html>
-
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        /* --- עיצוב הצדדים --- */
-        .card-front, .card-back {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 6px;
-            border: 3px solid white; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* --- צד קדמי (תמונה) --- */
-        .card-front {
-            background-color: white;
-            overflow: hidden;
-            border-color: #ddd; 
-        }
-
-        .card-front img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* --- צד אחורי (סימן שאלה) --- */
-        .card-back {
-            background: linear-gradient(135deg, #0052D4, #4364F7, #6FB1FC);
-            color: white;
-            font-size: 3rem;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px black;
-            transform: rotateY(180deg);
-        }
-
-        @media (min-width: 1024px) {
-            .card-back { font-size: 2.5vw; }
-        }
-
-    </style>
-</head>
-<body>
-
-    <div class="game-board" id="board"></div>
-
-    <script>
-        const board = document.getElementById('board');
-        const numberOfCards = 43; 
-
-        function createBoard() {
-            for (let i = 1; i <= numberOfCards; i++) {
-                const card = document.createElement('div');
-                card.classList.add('card');
-                
-                card.innerHTML = `
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <img src="${i}.jpg" loading="lazy">
-                        </div>
-                        <div class="card-back">?</div>
-                    </div>
-                `;
-
-                card.addEventListener('click', function() {
-                    this.classList.toggle('flipped');
-                });
-
-                board.appendChild(card);
-            }
-        }
-
-        createBoard();
-    </script>
-</body>
-</html>
         .card.flipped .card-inner {
             transform: rotateY(180deg);
         }
@@ -506,7 +161,3 @@
     </script>
 </body>
 </html>
-
-
-
-
