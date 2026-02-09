@@ -28,27 +28,27 @@
         }
 
         .card {
-    background-color: transparent;
-    aspect-ratio: 3 / 4;
-    perspective: 1000px;
-    cursor: pointer;
+          background-color: transparent;
+          aspect-ratio: 3 / 4;
+          perspective: 1000px;
+          cursor: pointer;
     
     /* --- התיקון: --- */
-    transform-style: preserve-3d; /* מוודא שהסיבוב נשאר באותו מרחב */
-    will-change: transform;       /* אומר לדפדפן להתכונן לשינוי, מונע קפיצות */
+          transform-style: preserve-3d; /* מוודא שהסיבוב נשאר באותו מרחב */
+          will-change: transform;       /* אומר לדפדפן להתכונן לשינוי, מונע קפיצות */
 }
 
 
         .card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
+          position: relative;
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          transition: transform 0.6s;
+          transform-style: preserve-3d;
     
     /* --- התיקון: --- */
-    transform-origin: center center; /* מקבע את ציר הסיבוב לאמצע בדיוק */
+          transform-origin: center center; /* מקבע את ציר הסיבוב לאמצע בדיוק */
 }
 
 
@@ -138,3 +138,4 @@
 </body>
 
 </html>
+
